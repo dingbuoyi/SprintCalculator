@@ -1,4 +1,4 @@
-package com.dingbuoyi.sprintcalculator;
+package com.dingbuoyi.sprintcalculator.model;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -11,11 +11,13 @@ public class SprintDate {
     final int year;
     final int month;
     final int dayOfMonth;
+    final SprintDateHelper dateHelper;
 
     public SprintDate(final int year, final int month, final int dayOfMonth) {
         this.year = year;
         this.month = month;
         this.dayOfMonth = dayOfMonth;
+        this.dateHelper = new SprintDateHelper();
     }
 
     public int getYear() {
@@ -51,74 +53,24 @@ public class SprintDate {
         if (days == 1) {
             return getAvailableStartDate(holidays);
         } else {
-            SprintDate sprintDate = getAvailableStartDate(holidays);
-
-            return sprintDate.getDaysAfter(days).get;
+            return null;
         }
     }
 
     private SprintDate getAvailableStartDate(Set<SprintDate> holidays) {
-        SprintDate sprintDate = new SprintDate(this.getYear(), this.getMonth(), this.getDayOfMonth());
-        return getValidDate(sprintDate, holidays);
-    }
-
-    private SprintDate getValidDate(SprintDate sprintDate, Set<SprintDate> holidays) {
-        if (sprintDate.isWeekend() || sprintDate.isPublicHoliday() || sprintDate.isHoliday(holidays)) {
-            return getValidDate(getDaysAfter(sprintDate, 1), holidays);
-        } else {
-            return sprintDate;
-        }
+        return dateHelper.getValidDate(this, holidays);
     }
 
     public SprintDate getDaysAfter(int days) {
-        return getDaysAfter(this, days);
-    }
-
-    private SprintDate getDaysAfter(SprintDate sprintDate, int days) {
-        Calendar calendar = sprintDate.toCalendar();
-        calendar.add(Calendar.DAY_OF_MONTH, days);
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        return new SprintDate(year, month, day);
+        return dateHelper.getDaysAfter(this, days);
     }
 
     public boolean isWeekend() {
-        Calendar calendar = toCalendar();
-        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-            return true;
-        } else {
-            return false;
-        }
+        return dateHelper.isWeekend(this);
     }
 
     public boolean isPublicHoliday() {
-        Calendar calendar = toCalendar();
-        if (isChristmas(calendar) || isNewYear(calendar)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isHoliday(Set<SprintDate> holidays) {
-        return holidays.contains(this);
-    }
-
-    private boolean isChristmas(Calendar calendar) {
-        if (calendar.get(Calendar.MONTH) == Calendar.DECEMBER && calendar.get(Calendar.DAY_OF_MONTH) == 25) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private boolean isNewYear(Calendar calendar) {
-        if (calendar.get(Calendar.MONTH) == Calendar.JANUARY && calendar.get(Calendar.DAY_OF_MONTH) == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return dateHelper.isPublicHoliday(this);
     }
 
     @Override

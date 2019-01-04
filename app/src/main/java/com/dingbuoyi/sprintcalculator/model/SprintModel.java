@@ -1,4 +1,4 @@
-package com.dingbuoyi.sprintcalculator;
+package com.dingbuoyi.sprintcalculator.model;
 
 import java.io.Serializable;
 

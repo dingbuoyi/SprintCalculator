@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
+import com.dingbuoyi.sprintcalculator.model.SprintSchedule;
 
 import java.util.ArrayList;
 

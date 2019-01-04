@@ -1,4 +1,8 @@
-package com.dingbuoyi.sprintcalculator;
+package com.dingbuoyi.sprintcalculator.core;
+
+import com.dingbuoyi.sprintcalculator.model.SprintDate;
+import com.dingbuoyi.sprintcalculator.model.SprintModel;
+import com.dingbuoyi.sprintcalculator.model.SprintSchedule;
 
 import java.util.ArrayList;
 import java.util.Set;
