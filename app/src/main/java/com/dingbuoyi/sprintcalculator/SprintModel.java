@@ -53,8 +53,8 @@ public class SprintModel implements Serializable {
         this.innovationDays = innovationDays;
     }
 
-    public int getTotalDays() {
-        return weeks * DAYS_OF_WEEK + retrospectiveDays + planDays + demoDays + innovationDays;
+    public int getPeriodDays() {
+        return weeks * DAYS_OF_WEEK - 1;
     }
 
     @Override

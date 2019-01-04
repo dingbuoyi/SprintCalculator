@@ -13,9 +13,14 @@
     <string name="retrospective_meeting">Retrospective meeting :</string>
     <string name="plan_meeting">Plan meeting :</string>
     <string name="innovation_days">Innovation days :</string>
+    <string name="demo_days">Demo :</string>
     <string name="total_days">Total days :</string>
+    <string name="sprint_start_number">Sprint Number :</string>
 
     <string name="please_select_start_date">Please select start date!</string>
     <string name="please_select_end_date">Please select end date!</string>
+    <string name="sprint_number_should_bigger_than_0">Sprint number should bigger than 0!</string>
+    <string name="start_date_should_not_be_weekend">Start date can\'t be weekend!</string>
+    <string name="start_date_should_not_be_public_holiday">Start date can\'t be public holiday!</string>
 
 </resources>

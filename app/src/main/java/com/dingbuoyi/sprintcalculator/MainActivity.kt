@@ -31,27 +31,48 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            if (startDate!!.isWeekend) {
+                Snackbar.make(view, getString(R.string.start_date_should_not_be_weekend), Snackbar.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            if (startDate!!.isPublicHoliday) {
+                Snackbar.make(view, getString(R.string.start_date_should_not_be_public_holiday), Snackbar.LENGTH_LONG)
+                    .show()
+                return@setOnClickListener
+            }
+
             if (endDate == null) {
                 Snackbar.make(view, getString(R.string.please_select_end_date), Snackbar.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
-            sprintModel.weeks = 3
-            sprintModel.retrospectiveDays = 1
-            sprintModel.innovationDays = 1
-            sprintModel.planDays = 1
+            var sprintNumber = Integer.valueOf(sprintNumberEditText.text.toString())
+            if (sprintNumber < 1) {
+                Snackbar.make(view, getString(R.string.sprint_number_should_bigger_than_0), Snackbar.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            sprintModel.weeks = periodSpinner.selectedItemPosition + 1
+            sprintModel.retrospectiveDays = retrospectiveMeetingSpinner.selectedItemPosition + 1
+            sprintModel.innovationDays = innovationDaysSpinner.selectedItemPosition + 1
+            sprintModel.planDays = planMeetingSpinner.selectedItemPosition + 1
+            sprintModel.demoDays = demoSpinner.selectedItemPosition + 1
 
             sprintCalculator = SprintCalculator(sprintModel, startDate, endDate, holidays)
 
 
             val intent = Intent(MainActivity@ this, SprintScheduleActivity::class.java)
             intent.putExtra(ActivityExtras.SPRINT_SCHEDULE_LIST, sprintCalculator.execute())
+            intent.putExtra(ActivityExtras.SPRINT_NUMBER, sprintNumber)
             startActivity(intent)
         }
 
         startDateBtn.setOnClickListener {
             selectStartDate()
         }
+
+        periodSpinner.setSelection(2)// default selected 3 weeks
     }
 
     private fun selectStartDate() {
