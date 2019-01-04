@@ -8,9 +8,17 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import java.lang.StringBuilder
 import java.util.*
+import kotlin.collections.HashSet
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var sprintCalculator: SprintCalculator
+    private var startDate: SprintDate? = null
+    private var endDate: SprintDate? = null
+
+    private val holidays = HashSet<SprintDate>()
+    private val sprintModel = SprintModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,8 +26,23 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            if (startDate == null) {
+                Snackbar.make(view, getString(R.string.please_select_start_date), Snackbar.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            if (endDate == null) {
+                Snackbar.make(view, getString(R.string.please_select_end_date), Snackbar.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            sprintModel.weeks = 3
+            sprintModel.reviewDays = 1
+            sprintModel.innovationDays = 1
+            sprintModel.planDays = 1
+
+            sprintCalculator = SprintCalculator(sprintModel, startDate, endDate, holidays)
+            sprintCalculator.execute()
         }
 
         startDateBtn.setOnClickListener {
@@ -32,16 +55,20 @@ class MainActivity : AppCompatActivity() {
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
 
-        val startDate = StringBuffer()
-        //实例化DatePickerDialog对象
+        val startDateStr = StringBuilder()
+        val endDateStr = StringBuilder()
         var datePickerDialog =
             DatePickerDialog(this@MainActivity, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                //因为monthOfYear会比实际月份少一月所以这边要加1
-                startDate.append(year).append("/").append(month + 1).append("/").append(dayOfMonth)
-                startDateTextView.text = startDate
+                startDateStr.append(year).append("/").append(month + 1).append("/").append(dayOfMonth)
+                startDateTextView.text = startDateStr
+
+                endDateStr.append(year).append("/").append(12).append("/").append(31)
+                endDateTextView.text = endDateStr
+
+                startDate = SprintDate(year, month, dayOfMonth)
+                endDate = SprintDate(year, 11, 31)
+
             }, year, month, day)
         datePickerDialog.show()
     }

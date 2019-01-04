@@ -11,4 +11,8 @@
     <string name="review_meeting">Review meeting : </string>
     <string name="plan_meeting">Plan meeting : </string>
     <string name="innovation_days">Innovation days : </string>
+
+    <string name="please_select_start_date">Please select start date! </string>
+    <string name="please_select_end_date">Please select end date! </string>
+
 </resources>
