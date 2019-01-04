@@ -1,6 +1,7 @@
 package com.dingbuoyi.sprintcalculator
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
@@ -8,7 +9,6 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import java.lang.StringBuilder
 import java.util.*
 import kotlin.collections.HashSet
 
@@ -37,12 +37,16 @@ class MainActivity : AppCompatActivity() {
             }
 
             sprintModel.weeks = 3
-            sprintModel.reviewDays = 1
+            sprintModel.retrospectiveDays = 1
             sprintModel.innovationDays = 1
             sprintModel.planDays = 1
 
             sprintCalculator = SprintCalculator(sprintModel, startDate, endDate, holidays)
-            sprintCalculator.execute()
+
+
+            val intent = Intent(MainActivity@ this, SprintScheduleActivity::class.java)
+            intent.putExtra(ActivityExtras.SPRINT_SCHEDULE_LIST, sprintCalculator.execute())
+            startActivity(intent)
         }
 
         startDateBtn.setOnClickListener {

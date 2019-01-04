@@ -47,10 +47,6 @@ public class SprintDate {
 
     @Override
     public String toString() {
-        return "SprintDate{" +
-                "year=" + year +
-                ", month=" + month +
-                ", dayOfMonth=" + dayOfMonth +
-                '}';
+        return year + "/" + (month + 1) + "/" + dayOfMonth;
     }
 }

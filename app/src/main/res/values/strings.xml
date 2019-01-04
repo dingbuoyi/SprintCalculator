@@ -2,17 +2,20 @@
     <string name="app_name">SprintCalculator</string>
     <string name="action_settings">Settings</string>
 
-    <!-- activity -->
-    <string name="start_date">Start date : </string>
-    <string name="end_date">End date : </string>
-    <string name="select_date">select</string>
-    <string name="sprint_period">Period : </string>
-    <string name="select_holidays">Holidays : </string>
-    <string name="review_meeting">Review meeting : </string>
-    <string name="plan_meeting">Plan meeting : </string>
-    <string name="innovation_days">Innovation days : </string>
+    <string name="sprint_schedule">Schedule</string>
 
-    <string name="please_select_start_date">Please select start date! </string>
-    <string name="please_select_end_date">Please select end date! </string>
+    <!-- activity -->
+    <string name="start_date">Start date :</string>
+    <string name="end_date">End date :</string>
+    <string name="select_date">select</string>
+    <string name="sprint_period">Period :</string>
+    <string name="select_holidays">Holidays :</string>
+    <string name="retrospective_meeting">Retrospective meeting :</string>
+    <string name="plan_meeting">Plan meeting :</string>
+    <string name="innovation_days">Innovation days :</string>
+    <string name="total_days">Total days :</string>
+
+    <string name="please_select_start_date">Please select start date!</string>
+    <string name="please_select_end_date">Please select end date!</string>
 
 </resources>

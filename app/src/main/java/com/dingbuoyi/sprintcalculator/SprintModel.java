@@ -5,13 +5,12 @@ import java.io.Serializable;
 public class SprintModel implements Serializable {
     private final static int DAYS_OF_WEEK = 7;
     private int weeks;
-    private int reviewDays;
+    private int retrospectiveDays;
     private int planDays;
     private int demoDays;
     private int innovationDays;
 
     public SprintModel() {
-
     }
 
     public int getWeeks() {
@@ -22,12 +21,12 @@ public class SprintModel implements Serializable {
         this.weeks = weeks;
     }
 
-    public int getReviewDays() {
-        return reviewDays;
+    public int getRetrospectiveDays() {
+        return retrospectiveDays;
     }
 
-    public void setReviewDays(int reviewDays) {
-        this.reviewDays = reviewDays;
+    public void setRetrospectiveDays(int retrospectiveDays) {
+        this.retrospectiveDays = retrospectiveDays;
     }
 
     public int getPlanDays() {
@@ -55,14 +54,14 @@ public class SprintModel implements Serializable {
     }
 
     public int getTotalDays() {
-        return weeks * DAYS_OF_WEEK + reviewDays + planDays + demoDays + innovationDays;
+        return weeks * DAYS_OF_WEEK + retrospectiveDays + planDays + demoDays + innovationDays;
     }
 
     @Override
     public String toString() {
         return "SprintModel{" +
                 "weeks=" + weeks +
-                ", reviewDays=" + reviewDays +
+                ", retrospectiveDays=" + retrospectiveDays +
                 ", planDays=" + planDays +
                 ", demoDays=" + demoDays +
                 ", innovationDays=" + innovationDays +
