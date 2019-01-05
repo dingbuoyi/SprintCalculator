@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.HandlerThread
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -15,8 +16,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.util.*
 import kotlin.collections.HashSet
-import android.os.HandlerThread
-import android.os.Looper
 
 
 class MainActivity : AppCompatActivity() {
@@ -61,10 +60,10 @@ class MainActivity : AppCompatActivity() {
             }
 
             sprintModel.weeks = periodSpinner.selectedItemPosition + 1
-            sprintModel.retrospectiveDays = retrospectiveMeetingSpinner.selectedItemPosition + 1
-            sprintModel.innovationDays = innovationDaysSpinner.selectedItemPosition + 1
-            sprintModel.planDays = planMeetingSpinner.selectedItemPosition + 1
-            sprintModel.demoDays = demoSpinner.selectedItemPosition + 1
+            sprintModel.retrospectiveDays = retrospectiveMeetingSpinner.selectedItemPosition
+            sprintModel.innovationDays = innovationDaysSpinner.selectedItemPosition
+            sprintModel.planDays = planMeetingSpinner.selectedItemPosition
+            sprintModel.demoDays = demoSpinner.selectedItemPosition
 
             sprintCalculator =
                     SprintCalculator(sprintModel, startDate, endDate, holidays)
@@ -84,6 +83,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         periodSpinner.setSelection(2)// default selected 3 weeks
+        retrospectiveMeetingSpinner.setSelection(1)
+        innovationDaysSpinner.setSelection(1)
+        planMeetingSpinner.setSelection(1)
+        demoSpinner.setSelection(1)
     }
 
     private fun selectStartDate() {
