@@ -12,6 +12,7 @@ import android.view.MenuItem
 import com.dingbuoyi.sprintcalculator.core.SprintCalculator
 import com.dingbuoyi.sprintcalculator.core.SprintDate
 import com.dingbuoyi.sprintcalculator.model.SprintModel
+import com.dingbuoyi.sprintcalculator.utils.Constants
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.util.*
@@ -82,6 +83,10 @@ class MainActivity : AppCompatActivity() {
             selectStartDate()
         }
 
+        selectHolidaysBtn.setOnClickListener {
+            selectHolidays()
+        }
+
         periodSpinner.setSelection(2)// default selected 3 weeks
         retrospectiveMeetingSpinner.setSelection(1)
         innovationDaysSpinner.setSelection(1)
@@ -112,6 +117,37 @@ class MainActivity : AppCompatActivity() {
         datePickerDialog.show()
     }
 
+    private fun getFormatHolidays(): String {
+        return if (holidays != null && !holidays.isEmpty()) {
+            var sb = StringBuffer()
+            for (holiday in holidays) {
+                if (holidays.size == 1) {
+                    sb.append(holiday.toString())
+                } else {
+                    sb.append(holiday.toString()).append(Constants.SEPARATOR)
+                }
+            }
+            sb.toString()
+        } else {
+            ""
+        }
+    }
+
+    private fun selectHolidays() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val startDateStr = StringBuilder()
+        var datePickerDialog =
+            DatePickerDialog(this@MainActivity, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                startDateStr.append(year).append("/").append(month + 1).append("/").append(dayOfMonth)
+                holidays.add(SprintDate(year, month, dayOfMonth))
+                holidaysTextView.text = getFormatHolidays()
+            }, year, month, day)
+        datePickerDialog.show()
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
