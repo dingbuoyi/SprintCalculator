@@ -7,12 +7,15 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import com.dingbuoyi.sprintcalculator.core.SprintCalculator
 import com.dingbuoyi.sprintcalculator.core.SprintDate
 import com.dingbuoyi.sprintcalculator.model.SprintModel
 import com.dingbuoyi.sprintcalculator.utils.Constants
+import com.google.gson.Gson
+import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.util.*
@@ -21,11 +24,12 @@ import kotlin.collections.HashSet
 
 class MainActivity : AppCompatActivity() {
     private lateinit var sprintCalculator: SprintCalculator
+    private lateinit var sprintModel: SprintModel
+
     private var startDate: SprintDate? = null
     private var endDate: SprintDate? = null
 
     private val holidays = HashSet<SprintDate>()
-    private val sprintModel = SprintModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +76,13 @@ class MainActivity : AppCompatActivity() {
             val handlerThread = HandlerThread("SprintCalculator Thread")
             handlerThread.start()
             Handler(handlerThread.looper).post {
+                Prefs.putString(ActivityExtras.SP_SPRINT_MODEL, Gson().toJson(sprintModel))
+                var holidayStringSet = HashSet<String>()
+                for (holiday in holidays) {
+                    holidayStringSet.add(Gson().toJson(holiday))
+                }
+                Prefs.putStringSet(ActivityExtras.SP_HOLIDAYS, holidayStringSet)
+
                 val intent = Intent(MainActivity@ this, SprintScheduleActivity::class.java)
                 intent.putExtra(ActivityExtras.SPRINT_SCHEDULE_LIST, sprintCalculator.execute())
                 intent.putExtra(ActivityExtras.SPRINT_NUMBER, sprintNumber)
@@ -92,11 +103,36 @@ class MainActivity : AppCompatActivity() {
             holidaysTextView.text = ""
         }
 
-        periodSpinner.setSelection(2)// default selected 3 weeks
-        retrospectiveMeetingSpinner.setSelection(1)
-        innovationDaysSpinner.setSelection(1)
-        planMeetingSpinner.setSelection(1)
-        demoSpinner.setSelection(1)
+        loadLastConfiguration()
+    }
+
+    private fun loadLastConfiguration() {
+        var sprintModelCache = Prefs.getString(ActivityExtras.SP_SPRINT_MODEL, "")
+        if (!TextUtils.isEmpty(sprintModelCache)) {
+            sprintModel = Gson().fromJson(sprintModelCache, SprintModel::class.java)
+        } else {
+            sprintModel.weeks = 3
+            sprintModel.demoDays = 1
+            sprintModel.innovationDays = 1
+            sprintModel.planDays = 1
+            sprintModel.retrospectiveDays = 1
+        }
+
+        periodSpinner.setSelection(sprintModel.weeks - 1)// default selected 3 weeks
+        retrospectiveMeetingSpinner.setSelection(sprintModel.retrospectiveDays)
+        innovationDaysSpinner.setSelection(sprintModel.innovationDays)
+        planMeetingSpinner.setSelection(sprintModel.planDays)
+        demoSpinner.setSelection(sprintModel.demoDays)
+
+        var holidaysCache = Prefs.getStringSet(ActivityExtras.SP_HOLIDAYS, null)
+        if (holidaysCache != null && !holidaysCache.isEmpty()) {
+            for (holidayJsonStr in holidaysCache) {
+                holidays.add(Gson().fromJson(holidayJsonStr, SprintDate::class.java))
+            }
+        }
+        if (!holidays.isEmpty()) {
+            holidaysTextView.text = getFormatHolidays()
+        }
     }
 
     private fun selectStartDate() {
