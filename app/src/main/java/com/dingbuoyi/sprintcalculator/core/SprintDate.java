@@ -3,15 +3,16 @@ package com.dingbuoyi.sprintcalculator.core;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Objects;
 import java.util.Set;
 
-public class SprintDate {
+public class SprintDate implements Serializable {
     final int year;
     final int month;
     final int dayOfMonth;
-    final SprintDateHelper dateHelper;
+    final transient SprintDateHelper dateHelper;
 
     public SprintDate(final int year, final int month, final int dayOfMonth) {
         this.year = year;
@@ -49,23 +50,12 @@ public class SprintDate {
         return Days.daysBetween(startDateTime, endDateTime).getDays();
     }
 
-    public SprintDate getAvailableEndDate(Set<SprintDate> holidays, int days) {
-        if (days == 1) {
-            return dateHelper.getValidDate(this, holidays);
-        } else {
-            return getAvailableEndDate(this.getDaysAfter(1), holidays, days--);
-        }
+    public SprintDate getAvailableEndingDay(Set<SprintDate> holidays, int days) {
+        return dateHelper.getAvailableEndDate(this, holidays, days);
     }
 
-    private SprintDate getAvailableEndDate(SprintDate sprintDate, Set<SprintDate> holidays, int days) {
-        if (days > 0) {
-            return dateHelper.getValidDate(sprintDate, holidays);
-        }
-        return null;
-    }
-
-    public SprintDate getDaysAfter(int days) {
-        return dateHelper.getDaysAfter(this, days);
+    public SprintDate getNextAvailableDay(Set<SprintDate> holidays) {
+        return dateHelper.getNextAvailableDate(this, holidays);
     }
 
     public boolean isWeekend() {

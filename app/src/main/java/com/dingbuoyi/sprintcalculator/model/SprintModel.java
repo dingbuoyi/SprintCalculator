@@ -3,7 +3,7 @@ package com.dingbuoyi.sprintcalculator.model;
 import java.io.Serializable;
 
 public class SprintModel implements Serializable {
-    private final static int DAYS_OF_WEEK = 7;
+    private final static int WORK_DAYS_OF_WEEK = 5;
     private int weeks;
     private int retrospectiveDays;
     private int planDays;
@@ -54,7 +54,7 @@ public class SprintModel implements Serializable {
     }
 
     public int getPeriodDays() {
-        return weeks * DAYS_OF_WEEK - 1;
+        return weeks * WORK_DAYS_OF_WEEK ;
     }
 
     @Override

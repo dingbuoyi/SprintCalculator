@@ -5,7 +5,19 @@ import java.util.Set;
 
 public final class SprintDateHelper {
 
-    public SprintDate getValidDate(SprintDate sprintDate, Set<SprintDate> holidays) {
+    public SprintDate getNextAvailableDate(SprintDate sprintDate, Set<SprintDate> holidays) {
+        return getAvailableEndDate(getDaysAfter(sprintDate, 1), holidays, 1);
+    }
+
+    public SprintDate getAvailableEndDate(SprintDate sprintDate, Set<SprintDate> holidays, int days) {
+        if (days > 1) {
+            SprintDate nextDay = getValidDate(getDaysAfter(sprintDate, 1), holidays);
+            return getAvailableEndDate(nextDay, holidays, --days);
+        }
+        return getValidDate(sprintDate, holidays);
+    }
+
+    private SprintDate getValidDate(SprintDate sprintDate, Set<SprintDate> holidays) {
         if (isWeekend(sprintDate) || isPublicHoliday(sprintDate) || isHoliday(sprintDate, holidays)) {
             return getValidDate(getDaysAfter(sprintDate, 1), holidays);
         } else {

@@ -5,6 +5,7 @@
     <string name="sprint_schedule">Schedule</string>
 
     <!-- activity -->
+    <string name="sprint">Sprint </string>
     <string name="start_date">Start date :</string>
     <string name="end_date">End date :</string>
     <string name="select_date">select</string>
@@ -12,8 +13,9 @@
     <string name="select_holidays">Holidays :</string>
     <string name="retrospective_meeting">Retrospective meeting :</string>
     <string name="plan_meeting">Plan meeting :</string>
+    <string name="working_days">Working days :</string>
     <string name="innovation_days">Innovation days :</string>
-    <string name="demo_days">Demo :</string>
+    <string name="demo_days">Demo days :</string>
     <string name="total_days">Total days :</string>
     <string name="sprint_start_number">Sprint Number :</string>
 

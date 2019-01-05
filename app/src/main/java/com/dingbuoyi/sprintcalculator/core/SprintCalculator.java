@@ -1,7 +1,10 @@
 package com.dingbuoyi.sprintcalculator.core;
 
+import android.content.Context;
+import com.dingbuoyi.sprintcalculator.R;
 import com.dingbuoyi.sprintcalculator.model.SprintModel;
 import com.dingbuoyi.sprintcalculator.model.SprintSchedule;
+import com.dingbuoyi.sprintcalculator.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -29,24 +32,31 @@ public class SprintCalculator {
     private ArrayList<SprintSchedule> calculator(SprintDate sprintStartDate, SprintDate sprintEndDate) {
         if (sprintStartDate.before(sprintEndDate)) {
             int periodDays = sprintModel.getPeriodDays();
-            SprintDate periodEndDate = sprintStartDate.getAvailableEndDate(holidays, periodDays);
-            System.out.println("period start day : " + sprintStartDate.toString() + " , period end day : " + periodEndDate.toString());
-            SprintDate innovationEndDay = periodEndDate.getDaysAfter(1).getAvailableEndDate(holidays, sprintModel.getInnovationDays());
-            System.out.println("innovation end day : " + innovationEndDay.toString());
-            SprintDate retrospectiveEndDay = innovationEndDay.getDaysAfter(1).getAvailableEndDate(holidays, sprintModel.getRetrospectiveDays());
-            System.out.println("retrospective end day : " + retrospectiveEndDay.toString());
-            SprintDate demoEndDay = retrospectiveEndDay.getDaysAfter(1).getAvailableEndDate(holidays, sprintModel.getDemoDays());
-            System.out.println("demo end day : " + demoEndDay.toString());
-            SprintDate planEndDay = demoEndDay.getDaysAfter(1).getAvailableEndDate(holidays, sprintModel.getPlanDays());
-            System.out.println("plan end day : " + planEndDay.toString());
+            SprintDate periodEndingDate = sprintStartDate.getAvailableEndingDay(holidays, periodDays);
+            System.out.println("period start day : " + sprintStartDate.toString() + " , period end day : " + periodEndingDate.toString());
+
+            SprintDate innovationStartDay = periodEndingDate.getNextAvailableDay(holidays);
+            SprintDate innovationEndingDay = innovationStartDay.getAvailableEndingDay(holidays, sprintModel.getInnovationDays());
+
+            SprintDate retrospectiveStartDay = innovationEndingDay.getNextAvailableDay(holidays);
+            SprintDate retrospectiveEndingDay = retrospectiveStartDay.getAvailableEndingDay(holidays, sprintModel.getRetrospectiveDays());
+
+            SprintDate demoStartDay = retrospectiveEndingDay.getNextAvailableDay(holidays);
+            SprintDate demoEndingDay = demoStartDay.getAvailableEndingDay(holidays, sprintModel.getDemoDays());
+
+            SprintDate planStartDay = demoEndingDay.getNextAvailableDay(holidays);
+            SprintDate planEndingDay = planStartDay.getAvailableEndingDay(holidays, sprintModel.getPlanDays());
 
             SprintSchedule sprintSchedule = new SprintSchedule();
-            sprintSchedule.setStartDate(sprintStartDate.toString());
-            sprintSchedule.setEndDate(planEndDay.toString());
-            sprintSchedule.setTotalDays(sprintStartDate.getTotalDays(planEndDay));
+            sprintSchedule.setWorkPeriod(new SprintSchedule.Period(sprintStartDate, periodEndingDate));
+            sprintSchedule.setInnovationPeriod(new SprintSchedule.Period(innovationStartDay, innovationEndingDay));
+            sprintSchedule.setRetrospectivePeriod(new SprintSchedule.Period(retrospectiveStartDay, retrospectiveEndingDay));
+            sprintSchedule.setDemoPeriod(new SprintSchedule.Period(demoStartDay, demoEndingDay));
+            sprintSchedule.setPlanPeriod(new SprintSchedule.Period(planStartDay, planEndingDay));
+            sprintSchedule.setTotalDays(sprintStartDate.getTotalDays(planEndingDay));
             sprintScheduleList.add(sprintSchedule);
 
-            calculator(planEndDay.getDaysAfter(1).getAvailableEndDate(holidays, 1), sprintEndDate);
+            calculator(planEndingDay.getNextAvailableDay(holidays), sprintEndDate);
         } else {
             System.out.println("calculator end");
         }
