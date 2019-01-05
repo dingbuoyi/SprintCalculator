@@ -87,6 +87,11 @@ class MainActivity : AppCompatActivity() {
             selectHolidays()
         }
 
+        clearHolidaysBtn.setOnClickListener {
+            holidays.clear()
+            holidaysTextView.text = ""
+        }
+
         periodSpinner.setSelection(2)// default selected 3 weeks
         retrospectiveMeetingSpinner.setSelection(1)
         innovationDaysSpinner.setSelection(1)
@@ -100,19 +105,67 @@ class MainActivity : AppCompatActivity() {
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        val startDateStr = StringBuilder()
-        val endDateStr = StringBuilder()
         var datePickerDialog =
             DatePickerDialog(this@MainActivity, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                startDateStr.append(year).append("/").append(month + 1).append("/").append(dayOfMonth)
-                startDateTextView.text = startDateStr
-
-                endDateStr.append(year).append("/").append(12).append("/").append(31)
-                endDateTextView.text = endDateStr
-
                 startDate = SprintDate(year, month, dayOfMonth)
-                endDate = SprintDate(year, 11, 31)
+                if (startDate!!.isWeekend) {
+                    Snackbar.make(
+                        rootLayout,
+                        getString(R.string.start_date_should_not_be_weekend),
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                    return@OnDateSetListener
+                }
 
+                if (startDate!!.isPublicHoliday) {
+                    Snackbar.make(
+                        rootLayout,
+                        getString(R.string.start_date_should_not_be_public_holiday),
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                    return@OnDateSetListener
+                }
+
+                startDateTextView.text = startDate.toString()
+
+                endDate = SprintDate(year, 11, 31)
+                endDateTextView.text = endDate.toString()
+            }, year, month, day)
+        datePickerDialog.show()
+    }
+
+    private fun selectHolidays() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        var datePickerDialog =
+            DatePickerDialog(this@MainActivity, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                var holiday = SprintDate(year, month, dayOfMonth)
+                if (holiday.isWeekend) {
+                    Snackbar.make(rootLayout, getString(R.string.holiday_should_not_be_weekend), Snackbar.LENGTH_LONG)
+                        .show()
+                    return@OnDateSetListener
+                }
+                if (holiday.isPublicHoliday) {
+                    Snackbar.make(
+                        rootLayout,
+                        getString(R.string.holiday_should_not_be_public_holiday),
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                    return@OnDateSetListener
+                }
+                if (holidays.contains(holiday)) {
+                    Snackbar.make(
+                        rootLayout,
+                        getString(R.string.holiday_already_been_selected),
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                    return@OnDateSetListener
+                }
+                holidays.add(holiday)
+                holidaysTextView.text = getFormatHolidays()
             }, year, month, day)
         datePickerDialog.show()
     }
@@ -131,22 +184,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             ""
         }
-    }
-
-    private fun selectHolidays() {
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-        val startDateStr = StringBuilder()
-        var datePickerDialog =
-            DatePickerDialog(this@MainActivity, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                startDateStr.append(year).append("/").append(month + 1).append("/").append(dayOfMonth)
-                holidays.add(SprintDate(year, month, dayOfMonth))
-                holidaysTextView.text = getFormatHolidays()
-            }, year, month, day)
-        datePickerDialog.show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

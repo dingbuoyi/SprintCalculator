@@ -3,9 +3,10 @@
     <string name="action_settings">Settings</string>
 
     <string name="sprint_schedule">Schedule</string>
+    <string name="common_clear">Clear</string>
 
     <!-- activity -->
-    <string name="sprint">Sprint </string>
+    <string name="sprint">Sprint</string>
     <string name="start_date">Start date :</string>
     <string name="end_date">End date :</string>
     <string name="select_date">select</string>
@@ -24,5 +25,9 @@
     <string name="sprint_number_should_bigger_than_0">Sprint number should bigger than 0!</string>
     <string name="start_date_should_not_be_weekend">Start date can\'t be weekend!</string>
     <string name="start_date_should_not_be_public_holiday">Start date can\'t be public holiday!</string>
+
+    <string name="holiday_should_not_be_weekend">Holiday can\'t be weekend!</string>
+    <string name="holiday_should_not_be_public_holiday">Holiday can\'t be public holiday!</string>
+    <string name="holiday_already_been_selected">Holiday already been selected!</string>
 
 </resources>
