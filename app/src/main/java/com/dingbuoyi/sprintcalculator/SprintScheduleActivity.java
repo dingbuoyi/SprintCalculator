@@ -35,7 +35,7 @@ public class SprintScheduleActivity extends AppCompatActivity {
         StringBuilder sprintScheduleContent = new StringBuilder();
         for (int i = 0; i < sprintScheduleList.size(); i++) {
             SprintSchedule sprintSchedule = sprintScheduleList.get(i);
-            sprintScheduleContent.append(getString(R.string.sprint) + (sprintNumber + i)).append(Constants.SEPARATOR).append(Constants.SEPARATOR);
+            sprintScheduleContent.append(getString(R.string.sprint) + "  " + (sprintNumber + i)).append(Constants.SEPARATOR).append(Constants.SEPARATOR);
             sprintScheduleContent.append(sprintSchedule.getFormatString(SprintScheduleActivity.this));
         }
         return sprintScheduleContent;
