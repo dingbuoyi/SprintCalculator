@@ -3,17 +3,21 @@ package com.dingbuoyi.sprintcalculator
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.dingbuoyi.sprintcalculator.core.SprintCalculator
-import com.dingbuoyi.sprintcalculator.model.SprintDate
+import com.dingbuoyi.sprintcalculator.core.SprintDate
 import com.dingbuoyi.sprintcalculator.model.SprintModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.util.*
 import kotlin.collections.HashSet
+import android.os.HandlerThread
+import android.os.Looper
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var sprintCalculator: SprintCalculator
@@ -65,11 +69,14 @@ class MainActivity : AppCompatActivity() {
             sprintCalculator =
                     SprintCalculator(sprintModel, startDate, endDate, holidays)
 
-
-            val intent = Intent(MainActivity@ this, SprintScheduleActivity::class.java)
-            intent.putExtra(ActivityExtras.SPRINT_SCHEDULE_LIST, sprintCalculator.execute())
-            intent.putExtra(ActivityExtras.SPRINT_NUMBER, sprintNumber)
-            startActivity(intent)
+            val handlerThread = HandlerThread("SprintCalculator Thread")
+            handlerThread.start()
+            Handler(handlerThread.looper).post {
+                val intent = Intent(MainActivity@ this, SprintScheduleActivity::class.java)
+                intent.putExtra(ActivityExtras.SPRINT_SCHEDULE_LIST, sprintCalculator.execute())
+                intent.putExtra(ActivityExtras.SPRINT_NUMBER, sprintNumber)
+                startActivity(intent)
+            }
         }
 
         startDateBtn.setOnClickListener {

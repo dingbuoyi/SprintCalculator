@@ -1,6 +1,5 @@
 package com.dingbuoyi.sprintcalculator.core;
 
-import com.dingbuoyi.sprintcalculator.model.SprintDate;
 import com.dingbuoyi.sprintcalculator.model.SprintModel;
 import com.dingbuoyi.sprintcalculator.model.SprintSchedule;
 
@@ -30,7 +29,7 @@ public class SprintCalculator {
     private ArrayList<SprintSchedule> calculator(SprintDate sprintStartDate, SprintDate sprintEndDate) {
         if (sprintStartDate.before(sprintEndDate)) {
             int periodDays = sprintModel.getPeriodDays();
-            SprintDate periodEndDate = sprintStartDate.getDaysAfter(periodDays);
+            SprintDate periodEndDate = sprintStartDate.getAvailableEndDate(holidays, periodDays);
             System.out.println("period start day : " + sprintStartDate.toString() + " , period end day : " + periodEndDate.toString());
             SprintDate innovationEndDay = periodEndDate.getDaysAfter(1).getAvailableEndDate(holidays, sprintModel.getInnovationDays());
             System.out.println("innovation end day : " + innovationEndDay.toString());

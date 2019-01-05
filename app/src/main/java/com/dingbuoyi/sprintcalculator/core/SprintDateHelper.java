@@ -1,4 +1,4 @@
-package com.dingbuoyi.sprintcalculator.model;
+package com.dingbuoyi.sprintcalculator.core;
 
 import java.util.Calendar;
 import java.util.Set;

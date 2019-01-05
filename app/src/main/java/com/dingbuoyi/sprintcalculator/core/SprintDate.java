@@ -1,4 +1,4 @@
-package com.dingbuoyi.sprintcalculator.model;
+package com.dingbuoyi.sprintcalculator.core;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -51,14 +51,17 @@ public class SprintDate {
 
     public SprintDate getAvailableEndDate(Set<SprintDate> holidays, int days) {
         if (days == 1) {
-            return getAvailableStartDate(holidays);
+            return dateHelper.getValidDate(this, holidays);
         } else {
-            return null;
+            return getAvailableEndDate(this.getDaysAfter(1), holidays, days--);
         }
     }
 
-    private SprintDate getAvailableStartDate(Set<SprintDate> holidays) {
-        return dateHelper.getValidDate(this, holidays);
+    private SprintDate getAvailableEndDate(SprintDate sprintDate, Set<SprintDate> holidays, int days) {
+        if (days > 0) {
+            return dateHelper.getValidDate(sprintDate, holidays);
+        }
+        return null;
     }
 
     public SprintDate getDaysAfter(int days) {
