@@ -111,6 +111,7 @@ class MainActivity : AppCompatActivity() {
         if (!TextUtils.isEmpty(sprintModelCache)) {
             sprintModel = Gson().fromJson(sprintModelCache, SprintModel::class.java)
         } else {
+            sprintModel = SprintModel()
             sprintModel.weeks = 3
             sprintModel.demoDays = 1
             sprintModel.innovationDays = 1

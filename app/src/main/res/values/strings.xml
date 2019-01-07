@@ -30,4 +30,6 @@
     <string name="holiday_should_not_be_public_holiday">Holiday can\'t be public holiday!</string>
     <string name="holiday_already_been_selected">Holiday already been selected!</string>
 
+    <string name="copy_sprint_content_success">Copy sprint content success!</string>
+
 </resources>
